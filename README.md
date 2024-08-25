@@ -37,6 +37,7 @@ make clean all
 )
 
 # fontcustom
+rvm use 2.7
 rvm pkg install openssl
 rvm install 2.4 --with-openssl-dir=$HOME/.rvm/usr
 gem update --system 3.3.22
