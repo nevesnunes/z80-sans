@@ -87,18 +87,18 @@ It's never very clear how to translate them to .ttx, so in the end I just conver
 Pretty much most challenges were solved with contextual chaining rules. To handle addresses, each nibble in range `0..f` was encoded with distinct glyphs, with spacing characters used to create multiple substitutions, one character at a time. Displacements also have additional signed variants. This gives us a total of `(4 + 2) * 16` glyphs for numbers. This was already enough to keep the font file under the 65536 glyphs limit.
 
 The worst part was of course out-of-order operands. However, due to the limited number of variations these have in instructions, they could be covered by the same strategy as instructions with ambiguously encoded prefixes, e.g. 
-    ```
-    ["SET b,(IX+o)", "DD CB o C6+8*b"],
-    ["SET b,(IY+o)", "FD CB o C6+8*b"],
-    ```
+```
+["SET b,(IX+o)", "DD CB o C6+8*b"],
+["SET b,(IY+o)", "FD CB o C6+8*b"],
+```
 
 Is covered by the same lookup rules as:
-    ```
-    ["SRA (IX+o)", "DD CB o 2E"],
-    ["SRA (IY+o)", "FD CB o 2E"],
-    ["SRL (IX+o)", "DD CB o 3E"],
-    ["SRL (IY+o)", "FD CB o 3E"],
-    ```
+```
+["SRA (IX+o)", "DD CB o 2E"],
+["SRA (IY+o)", "FD CB o 2E"],
+["SRL (IX+o)", "DD CB o 3E"],
+["SRL (IY+o)", "FD CB o 3E"],
+```
 
 An interesting property in the Z80 ISA is that bits and registers have up to 8 variations, and these out-of-order cases only involve offsets and one of those specific operands. Therefore, we can encode bits or registers as literals. With sufficient lookaheads, we can match up to the last hexadecimal byte, and create dedicated lookups for each case. The last literals can be reduced by generating a ligature that matches the suffix glyph. The end result was dozens more generated lookups for these cases (which can likely be grouped to reduce this number).
 
