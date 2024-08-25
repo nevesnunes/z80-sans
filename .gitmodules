@@ -1,0 +1,9 @@
+[submodule "modules/fontcustom"]
+	path = modules/fontcustom
+	url = https://github.com/FontCustom/fontcustom
+[submodule "modules/woff2"]
+	path = modules/woff2
+	url = https://github.com/google/woff2.git
+[submodule "modules/fontforge"]
+	path = modules/fontforge
+	url = https://github.com/fontforge/fontforge

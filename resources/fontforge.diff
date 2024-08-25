@@ -1,0 +1,107 @@
+diff --git a/fontforge/python.c b/fontforge/python.c
+index 8a3cb0fd9..d50b8f32c 100644
+--- a/fontforge/python.c
++++ b/fontforge/python.c
+@@ -7059,14 +7059,6 @@ return( -1 );
+ return( 0 );
+ }
+ 
+-static PyObject *PyFF_Glyph_get_rsb(PyFF_Glyph *self, void *UNUSED(closure)) {
+-    DBounds b;
+-
+-    SplineCharFindBounds(self->sc,&b);
+-
+-return( Py_BuildValue("d", self->sc->width - b.maxx ));
+-}
+-
+ static int PyFF_Glyph_set_rsb(PyFF_Glyph *self,PyObject *value, void *UNUSED(closure)) {
+     int val;
+     DBounds b;
+@@ -7081,6 +7073,17 @@ return( -1 );
+ return( 0 );
+ }
+ 
++static PyObject *PyFF_Glyph_get_rsb(PyFF_Glyph *self, void *UNUSED(closure)) {
++    DBounds b;
++
++    SplineCharFindBounds(self->sc,&b);
++
++    PyFF_Glyph_set_lsb(self,PyLong_FromLong(0),NULL);
++    PyFF_Glyph_set_rsb(self,PyLong_FromLong(0),NULL);
++
++return( Py_BuildValue("d", self->sc->width - b.maxx ));
++}
++
+ static PyObject *PyFF_Glyph_get_vwidth(PyFF_Glyph *self, void *UNUSED(closure)) {
+ 
+ return( Py_BuildValue("i", self->sc->vwidth ));
+diff --git a/fontforge/svg.c b/fontforge/svg.c
+index d98414b08..7ecc85431 100644
+--- a/fontforge/svg.c
++++ b/fontforge/svg.c
+@@ -2853,6 +2853,42 @@ static Entity *SVGParseSVG(xmlNodePtr svg,int em_size,int ascent,bool scale,Spli
+ 	swidth = strtod((char *) end+1,&end);
+ 	sheight = strtod((char *) end+1,&end);
+ 	xmlFree(num);
++    fprintf(stderr, " wh %08f %08f\n", width, height);
++    fprintf(stderr, "swh %08d %08f %08f\n", em_size, swidth, sheight);
++    fprintf(stderr, " st %08f %08f %08f %08f\n", st.transform[0], st.transform[1], st.transform[2], st.transform[3]);
++
++            st.transform[0] *= 6;
++            st.transform[3] *= 6;
++
++        /*
++        int newwidth = 3000;
++		st.transform[1] = st.transform[2] = st.transform[5] = 0;
++		st.transform[4] = newwidth;
++        if (sc) {
++		FVTrans( (FontViewBase *)sc->parent->fv,sc,st.transform,NULL,fvt_dontmovewidth);
++	    SCSynchronizeWidth(sc,newwidth,sc->width,NULL);
++	    SCCharChangedUpdate(sc,ly_none);
++        }
++        */
++
++    /*
++	if ( width>height ) {
++	    if ( swidth!=0 && sheight!=0 ) {
++            st.transform[0] *= swidth/sheight;
++            st.transform[3] *= swidth/sheight;
++	    }
++	} else {
++	    if ( swidth!=0 && sheight!=0 ) {
++            st.transform[0] *= sheight/swidth;
++            st.transform[3] *= sheight/swidth;
++	    }
++	}
++    */
++    /*
++    if ( scale && swidth!=0 && sheight!=0) {
++		//st.transform[0] *= em_size * 6;
++		//st.transform[3] *= em_size * 6;
++    }
+ 	if ( width>height ) {
+ 	    if ( scale && swidth!=0 ) {
+ 		st.transform[0] *= em_size/swidth;
+@@ -2864,6 +2900,7 @@ static Entity *SVGParseSVG(xmlNodePtr svg,int em_size,int ascent,bool scale,Spli
+ 		st.transform[3] *= em_size/sheight;
+ 	    }
+ 	}
++    */
+     }
+ return( _SVGParseSVG(svg,svg,&st));
+ }
+@@ -2877,8 +2914,12 @@ static void SVGParseGlyphBody(SplineChar *sc, xmlNodePtr glyph,
+ 	sc->layers[ly_fore].splines = SVGParseExtendedPath(glyph,glyph);
+ 	xmlFree(path);
+     } else {
+-	Entity *ent = SVGParseSVG(glyph,sc->parent->ascent+sc->parent->descent,
+-		sc->parent->ascent,ip->scale,ip->dimensions ? sc : NULL,false);
++	Entity *ent = SVGParseSVG(glyph,
++		sc->parent->ascent+sc->parent->descent,
++		sc->parent->ascent,
++		ip->scale,
++		ip->dimensions ? sc : NULL,
++		false);
+ 	sc->layer_cnt = 1;
+ 	SCAppendEntityLayers(sc,ent,ip);
+ 	if ( sc->layer_cnt==1 ) ++sc->layer_cnt;
