@@ -112,7 +112,7 @@ An interesting property in the Z80 ISA is that bits and registers have up to 8 v
 # Credits
 
 * [Droid Sans Mono](https://github.com/google/fonts/tree/7503f3c66297f9ec08aecf04edf355247da70ab8/apache/droidsansmono) and [Noto Sans Mono](https://github.com/google/fonts/tree/d917462c0d0f44b2e205aeb769790a175b3e752f/ofl/notosansmono) were used as base for Z80 Sans;
-* `./resources/instructions.json` was adapted from [maziac/z80\-instruction\-set](https://github.com/maziac/z80-instruction-set);
+* `./resources/instructions.json` was adapted from [maziac/z80\-instruction\-set](https://github.com/maziac/z80-instruction-set/blob/3b6bfaeedebd68cc590348c0231b48a4d44edfe5/src/z80InstructionSetRawData.ts);
 * Inspiration for GSUB substitutions:
     * [Font with Built-In Syntax Highlighting](https://blog.glyphdrawing.club/font-with-built-in-syntax-highlighting/);
     * [Fontemon](https://www.coderelay.io/fontemon.html), in particular ["How I did it"](https://github.com/mmulet/code-relay/blob/main/markdown/HowIDidIt.md);
