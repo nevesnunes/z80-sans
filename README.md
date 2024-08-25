@@ -16,7 +16,7 @@ Tested on Debian GNU/Linux 12. Note that this Debian version ships with ruby ver
 apt install imagemagick potrace
 pip install fonttools
 
-git init update --init --recursive
+git submodule update --init --recursive
 
 # fontforge
 (
