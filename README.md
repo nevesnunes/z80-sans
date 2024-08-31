@@ -2,7 +2,7 @@
 
 What's your favourite disassembler? Mine's a font:
 
-![](./test/1.gif)
+https://github.com/user-attachments/assets/bb6ceb18-c2fd-40a9-be4f-202321a214d9
 
 This font converts sequences of hexadecimal lowercase characters into disassembled Z80 instructions, by making extensive use of OpenType's [Glyph Substitution Table (GSUB)](https://learn.microsoft.com/en-us/typography/opentype/spec/gsub) and [Glyph Positioning Table (GPOS)](https://learn.microsoft.com/en-us/typography/opentype/spec/gpos).
 
@@ -108,6 +108,14 @@ An interesting property in the Z80 ISA is that bits and registers have up to 8 v
     * `LD (IX+o),r` is rendered as `LD (IX+o r),`;
     * `SET b,(IX+o)` is rendered as `SET b,(IX+o))`;
 * "CTF quality" code 😅;
+
+# Future Work
+
+FontForge supports scriptable modification of features using commands [GenerateFeatureFile()](https://fontforge.org/docs/scripting/scripting-alpha.html#GenerateFeatureFile) and [MergeFeature()](https://fontforge.org/docs/scripting/scripting-alpha.html#MergeFeature) (briefly covered in [The Terrible Secret of OpenType Glyph Substitution \- Ansuz \- mskala's home page](https://ansuz.sooke.bc.ca/entry/131)). I was only aware of this after making the .ttx based implementation, but it could potentially have avoided messing with .ttx files.
+
+For more complex instruction sets, an alternative approach that seems to have less constraints is to use font shapers. Some examples:
+* [fuglede/llama\.ttf: A font for writing tiny stories](https://github.com/fuglede/llama.ttf);
+* [hsfzxjy/handwriter\.ttf: Handwriting synthesis with Harfbuzz WASM\.](https://github.com/hsfzxjy/handwriter.ttf);
 
 # Credits
 
